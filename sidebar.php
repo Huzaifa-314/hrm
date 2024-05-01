@@ -6,7 +6,7 @@
         </div>
             <div class="sidebar-menu">
                 <ul>
-                    <li><a href="" style="text-decoration: none;"><i class="fa fa-users"></i> <span>Employee</span></a></li>
+                    <li><a href="employee.php" style="text-decoration: none;"><i class="fa fa-users"></i> <span>Employee</span></a></li>
                     <li><a href="departments.php" style="text-decoration: none;"> <i class="fa fa-warehouse"></i> <span>Department</span></a></li>
                     <li><a href="designation.php" style="text-decoration: none;"> <i class="fa fa-turn-up"></i> <span>Designation</span></a></li>
                     <li><a href="#" style="text-decoration: none;"> <i class="fa fa-file"></i> <span>Projects</span></a></li>

@@ -16,7 +16,7 @@ include "include/db_connection.php";
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@600;700&display=swap" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="style.css"/>
 
-  <title>Department Table Application</title>
+  <title>Employee Table Application</title>
 </head>
 
 <body>
@@ -31,7 +31,7 @@ include "include/db_connection.php";
 
          <div class="main_contect_body">
                   <div class= "department_tiltle" >
-                      Department Information List
+                      Employee List
                     </div>
 
             <div class="container">
@@ -44,7 +44,7 @@ include "include/db_connection.php";
                 </div>';
                 }
                 ?>
-              <a class="add_department" href="add_department.php" class="btn btn-primary mb-3"><i class="fa-solid fa-plus"></i>Add New Department</a>
+              <a class="add_department" href="add_employee.php" class="btn btn-primary mb-3"><i class="fa-solid fa-plus"></i>Add New Employee</a>
 
               <table style="text-align: center;" class="table table-hover text-center">
     
@@ -52,6 +52,9 @@ include "include/db_connection.php";
                   <tr>
                     <th scope="col">ID</th>
                     <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">NID</th>
+                    <th scope="col">Designation</th>
                     <th scope="col">Action</th>
                   </tr>
                 </thead>
@@ -60,7 +63,7 @@ include "include/db_connection.php";
                 <tbody>
                     <?php
                     $no = 1;
-                    $sql = "SELECT * FROM `department`";
+                    $sql = "SELECT * FROM `users`";
                     $result = mysqli_query($conn, $sql);
                     while ($row = mysqli_fetch_assoc($result)) {
                       ?>
@@ -69,10 +72,28 @@ include "include/db_connection.php";
                         <?php echo $no; ?>
                       </td>
                       <td>
-                        <?php echo $row["name"] ?>
+                        <?php echo $row["first_name"]." ".$row['last_name'] ?>
                       </td>
                       <td>
-                        <a href="edit_department.php?id=<?php echo $row["id"] ?>" class="link-primary"><i
+                        <?php echo $row["email"] ?>
+                      </td>
+                      <td>
+                        <?php echo $row["NID"] ?>
+                      </td>
+                      <td>
+                            <?php 
+                            $desig_id = $row["desig_id"];
+                            $desig_result = mysqli_query($conn,"SELECT name FROM designation WHERE id = '$desig_id'");
+                            $desig_row = mysqli_fetch_assoc($desig_result);
+                            if($desig_row){
+                                
+                                echo $desig_row['name'];
+                            } 
+                            else echo 'No Designation Assigned';
+                            ?>
+                        </td>
+                      <td>
+                        <a href="edit_employee.php?id=<?php echo $row["id"] ?>" class="link-primary"><i
                             class="fa-solid fa-pen-to-square fs-5 me-3"></i></a>
                       
                         <a href="#" class="link-dark"><i class="fa-solid fa-trash fs-5" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal<?php echo $row["id"];?>"></i></a>
@@ -91,7 +112,7 @@ include "include/db_connection.php";
                               </div>
                               <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back</button>
-                                <a href="delete_department.php?id=<?php echo $row["id"] ?>" class="btn btn-success">Confirm</i></a>
+                                <a href="delete_employee.php?id=<?php echo $row["id"] ?>" class="btn btn-success">Confirm</i></a>
                               </div>
                             </div>
                           </div>

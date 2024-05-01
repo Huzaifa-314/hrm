@@ -31,7 +31,7 @@ include "include/db_connection.php";
             
             <div class="main_contect_body">
                     <div class= "department_tiltle" >
-                        Department Information List
+                        Edit Employee Information
                     </div>
 
                     <?php
@@ -39,17 +39,20 @@ include "include/db_connection.php";
                         $id = $_GET["id"]; 
 
                         if (isset($_POST["submit"])) {
-                        $name = $_POST['name'];
+                            $name = $_POST['name'];
+                            $email = $_POST['email'];
+                            $NID = $_POST['NID'];
+                            $desig_id = $_POST['department_id']; // Get the selected designation ID
                         
-                        $sql = "UPDATE `department` SET `name`='$name' WHERE id = $id";
-
-                        $result = mysqli_query($conn, $sql);
-
-                        if ($result) {
-                            header("Location: departments.php?msg=Data updated successfully");
-                        } else {
-                            echo "Failed: " . mysqli_error($conn);
-                        }
+                            // Update user information
+                            $sql = "UPDATE `users` SET `first_name`='$name', `email`='$email', `NID`='$NID', `desig_id`='$desig_id' WHERE id = $id";
+                            $result = mysqli_query($conn, $sql);
+                        
+                            if ($result) {
+                                header("Location: employee.php?msg=User information updated successfully");
+                            } else {
+                                echo "Failed: " . mysqli_error($conn);
+                            }
                         }
 
                          ?>
@@ -62,7 +65,7 @@ include "include/db_connection.php";
                             </div>
 
                             <?php
-                            $sql = "SELECT * FROM `department` WHERE id = $id LIMIT 1";
+                            $sql = "SELECT * FROM `users` WHERE id = $id LIMIT 1";
                             $result = mysqli_query($conn, $sql);
                             $row = mysqli_fetch_assoc($result);
                             ?>
@@ -71,8 +74,32 @@ include "include/db_connection.php";
                             <form action="" method="post" style="width:50vw; min-width:300px;">
                                 <div class="row mb-3">
                                 <div class="col">
-                                    <label class="form-label">Enter Department Name</label>
-                                    <input type="text" class="form-control" name="name" style="margin-bottom: 20px;" value="<?php echo $row['name'] ?>">
+                                    <label class="form-label">Enter User Name</label>
+                                    <input type="text" class="form-control" name="name" style="margin-bottom: 20px;" value="<?php echo $row['first_name'] ?>">
+                                </div>
+                                <div class="col1">
+                                    <label class="form-label">Enter User Email</label>
+                                    <input type="text" class="form-control" name="email" style="margin-bottom: 20px;" value="<?php echo $row['email'] ?>">
+                                </div>
+                                <div class="col2">
+                                    <label class="form-label">Enter User NID</label>
+                                    <input type="text" class="form-control" name="NID" style="margin-bottom: 20px;" value="<?php echo $row['NID'] ?>">
+                                </div>
+                                <div class="col3">
+                                    <label class="form-label">Select Designation</label>
+                                    <select class="form-control mb-3" name="department_id">
+                                        
+                                        <?php
+                                        $desig = mysqli_query($conn, "SELECT * FROM designation");
+                                        while ($desig_row = mysqli_fetch_assoc($desig)) {
+                                            ?>
+                                            <option value="<?php echo $desig_row['id']; ?>" <?php if ($row['desig_id'] == $desig_row['id']) echo "selected"; ?>>
+                                                <?php echo $desig_row['name']; ?>
+                                            </option>
+                                            <?php
+                                        }
+                                        ?>
+                                    </select>
                                 </div>
                                 <div>
                                 <button type="submit" class="btn btn-primary" name="submit">Update</button>

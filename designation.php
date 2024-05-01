@@ -1,5 +1,5 @@
 <?php
-include "designationconnect.php";
+include "include/db_connection.php";
 ?>
 
 <!DOCTYPE html>
@@ -74,16 +74,29 @@ include "designationconnect.php";
               <?php echo $row["name"] ?>
             </td>
             <td>
-              <?php echo $row["department"] ?>
-            </td>
+              <?php
+              // Retrieve the department name based on the department ID
+              $department_id = $row["department_id"];
+              $department_query = "SELECT name FROM department WHERE id = $department_id";
+              $department_result = mysqli_query($conn, $department_query);
+
+              // Check if department name was found
+              if (mysqli_num_rows($department_result) > 0) {
+                  $department_row = mysqli_fetch_assoc($department_result);
+                  ?><span class="badge badge-info"><?php echo $department_row["name"];?></span><?php
+              } else {
+                  echo "Department not found";
+              }
+              ?>
+          </td>
             <td>
               <a href="edit_designation.php?id=<?php echo $row["id"] ?>" class="link-primary"><i
                   class="fa-solid fa-pen-to-square fs-5 me-3"></i></a>
              
-              <a href="#<?php echo $row["id"] ?>" class="link-dark"><i class="fa-solid fa-trash fs-5" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal"></i></a>
+              <a href="#<?php echo $row["id"] ?>" class="link-dark"><i class="fa-solid fa-trash fs-5" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal<?php echo $row["id"] ?>"></i></a>
 
               <!-- Modal -->
-              <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+              <div class="modal fade" id="deleteConfirmModal<?php echo $row["id"];?>" tabindex="-1" aria-labelledby="exampleModalLabel"
                 aria-hidden="true">
                 <div class="modal-dialog">
                   <div class="modal-content">

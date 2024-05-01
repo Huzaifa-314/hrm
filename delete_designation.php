@@ -1,5 +1,5 @@
 <?php
-include "designationconnect.php";
+include "include/db_connection.php";
 $id = $_GET["id"];
 $sql = "DELETE FROM `designation` WHERE id = $id";
 $result = mysqli_query($conn, $sql);

@@ -1,5 +1,5 @@
 <?php
-include "designationconnect.php";
+include "include/db_connection.php";
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -35,33 +35,58 @@ include "designationconnect.php";
                     </div>
                     <?php
 
-if (isset($_POST["submit"])) {
-   $name = $_POST['name'];
-   $department = $_POST['department'];
-  
+                        if (isset($_POST["submit"])) {
+                           $designation = $_POST['designation'];
+                           $department = $_POST['department_id'];
+                        
 
-   $sql = "INSERT INTO `designation`(`id`, `name`, `department`) VALUES (NULL,'$name','$department')";
+                           $sql = "INSERT INTO `designation`(`id`, `name`, `department_id`) VALUES (NULL,'$designation','$department')";
 
-   $result = mysqli_query($conn, $sql);
+                           $result = mysqli_query($conn, $sql);
 
-   if ($result) {
-      
-      header("Location:designation.php?msg=New record created successfully");
-   } else {
-      echo "Failed: " . mysqli_error($conn);
-   }
-}
-?>
-      <div class="container d-flex justify-content-center">
-         <form action="" method="post" style="width:50vw; min-width:300px;">
-            <div class="row mb-3">
-            <div class="col">
-            <label class="form-label">Enter Department Name</label>
-            <input type="text" class="form-control" name="name" >
+                           if ($result) {
+                              
+                              header("Location:designation.php?msg=New record created successfully");
+                           } else {
+                              echo "Failed: " . mysqli_error($conn);
+                           }
+                        }
+                        ?>
+                              <div class="container d-flex justify-content-center">
+                                 <form action="" method="post" style="width:50vw; min-width:300px;">
+                                    <div class="row mb-3">
+                                    <div class="col">
+                                    <?php
+                        // Query to fetch all department names
+                        $sql = "SELECT id, name FROM department";
+                        $result = mysqli_query($conn, $sql);
+
+                        // Check if any departments were found
+                        if (mysqli_num_rows($result) > 0) {
+                           ?>
+                           <div class="form-group">
+                              <label for="department_id" class="form-label">Select Department Name</label>
+                              <select name="department_id" id="department_id" class="form-control">
+                                    <?php
+                                    // Output data of each row
+                                    while ($row = mysqli_fetch_assoc($result)) {
+                                       ?>
+                                       <option value="<?php echo $row["id"]; ?>"><?php echo $row["name"]; ?></option>
+                                       <?php
+                                    }
+                                    ?>
+                              </select>
+                           </div>
+                           <?php
+                        } else {
+                           echo "No departments found";
+                        }
+                        ?>
+
           </div>
           <div class="col1">
             <label class="form-label">Enter Designation Name</label>
-            <input type="text" class="form-control" name="department" style="margin-bottom: 20px;">
+            <input type="text" class="form-control" name="designation" style="margin-bottom: 20px;">
           </div>
          <div>
 

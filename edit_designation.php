@@ -1,6 +1,20 @@
 <?php
-include "designationconnect.php";
+include "include/db_connection.php";
+
 $id = $_GET["id"];
+// Fetch all department names from the database
+$department_query = "SELECT id, name FROM department";
+$department_result = mysqli_query($conn, $department_query);
+// Check if departments were found
+if (mysqli_num_rows($department_result) > 0) {
+  // Create an associative array to store department names with their IDs
+  $departments = array();
+  while ($row = mysqli_fetch_assoc($department_result)) {
+      $departments[$row["id"]] = $row["name"];
+  }
+} else {
+  echo "No departments found";
+}
 
 ?>
 
@@ -42,15 +56,15 @@ $id = $_GET["id"];
 
   
   <?php
-include "designationconnect.php";
+
 $id = $_GET["id"];
 
 if (isset($_POST["submit"])) {
   $name = $_POST['name'];
-  $department = $_POST['department'];
+  $department = $_POST['department_id'];
   
   
-  $sql = "UPDATE `designation` SET `name`='$name', `department`='$department' WHERE id = $id";
+  $sql = "UPDATE `designation` SET `name`='$name', `department_id`='$department' WHERE id = $id";
 
   $result = mysqli_query($conn, $sql);
 
@@ -86,8 +100,16 @@ if (isset($_POST["submit"])) {
             <input type="text" class="form-control" name="name" value="<?php echo $row['name'] ?>">
           </div>
           <div class="col1">
-            <label class="form-label">Enter Department Name</label>
-            <input type="text" class="form-control" name="department" style="margin-bottom: 20px;" value="<?php echo $row['department'] ?>">
+            <label class="form-label">Select Department</label>
+            <select class="form-control mb-3" name="department_id">
+                <?php
+                // Output options for each department
+                foreach ($departments as $department_id => $department_name) {
+                    $selected = ($row['department_id'] == $department_id) ? 'selected' : '';
+                    echo "<option value='$department_id' $selected>$department_name</option>";
+                }
+                ?>
+            </select>
           </div>
          <div>
           <button  type="submit" class="btn btn-primary" name="submit">Update</button>
